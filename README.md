@@ -76,6 +76,8 @@ go get github.com/BurntSushi/toml
 go get github.com/julienschmidt/httprouter
 ```
 
+Edit `config.toml` options for `hmr` and `serve`. Change `192.0.0.1` to `localhost` if you wish.
+
 A simple Makefile is provided to build and run the server:
 
 `make run-server`
