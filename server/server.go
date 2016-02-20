@@ -1,4 +1,4 @@
-package server
+package main
 
 import (
 	"io/ioutil"
@@ -14,6 +14,12 @@ import (
 const (
 	CONFIG_FILE = "config.toml"
 )
+
+func main() {
+	s := &Server{}
+	s.ParseConfig()
+	s.Bootstrap()
+}
 
 type config struct {
 	dev      bool

@@ -1,4 +1,4 @@
-package server
+package main
 
 import (
 	"html/template"
@@ -35,31 +35,35 @@ func (r defaultApp) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 func (s *Server) mapRoutes() {
 	r := s.router
 
-	cwd, _ := os.Getwd()
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	staticPath := path.Join(cwd, s.config.static)
 	var staticURL string
 	var staticBundleURL string
 	if s.config.hot {
 		// create the prefix necessary to load bundles from hmr server
 		staticBundleURL = s.config.hmr
-		staticURL = s.config.address
+		staticURL = s.config.serve
 	} else {
 		// ensure bundles exist if not hot reloading
 		ensureBundles(s.config.js, s.config.style, staticPath)
-		if s.config.dev {
-			staticBundleURL = s.config.address
-			staticURL = s.config.address
-		} else {
-			staticBundleURL = s.config.serve
-			staticURL = s.config.serve
-		}
+		staticBundleURL = s.config.serve
+		staticURL = s.config.serve
 	}
 	staticBundleURL = path.Join(staticBundleURL, s.config.static)
 	staticURL = path.Join(staticURL, s.config.static)
-	log.Warnln(s.config.js)
-	log.Warnln(s.config.static)
-	// create the default app (the route used to serve the client app)
 	app := defaultApp{}
+	app.data = map[string]interface{}{
+		"Js":     path.Join(staticBundleURL, s.config.js),
+		"Style":  path.Join(staticBundleURL, s.config.js),
+		"Static": staticURL,
+		"Hot":    s.config.hot,
+	}
+
+	// create the default app (the route used to serve the client app)
 	// load template
 	f, err := os.Open(s.config.template)
 	if err != nil {
@@ -77,12 +81,7 @@ func (s *Server) mapRoutes() {
 		log.Errorln("Tpl parse err", err)
 		os.Exit(1)
 	}
-	app.data = map[string]interface{}{
-		"Js":     path.Join(staticBundleURL, s.config.js),
-		"Style":  path.Join(staticBundleURL, s.config.style),
-		"Static": staticURL,
-		"Hot":    s.config.hot,
-	}
+
 	log.Warnln(app.data)
 	app.template = tpl
 

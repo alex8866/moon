@@ -83,10 +83,9 @@ if (config.common.hot) {
 
   // parse the host/port from config
   var host, port, parts;
-  parts = config.common.hmr.split(':');
+  parts = config.server.address.split(':');
   host = parts[0];
-  port = parseInt(parts[1]);
-  delete parts;
+  port = parseInt(parts[1]) + 1;
 
   // start up the server
   app.listen(port, host, function(err) {
@@ -94,7 +93,6 @@ if (config.common.hot) {
       console.log('HMR server bootstrap err: ' + err);
       return;
     }
-    console.log('Started hmr server at ' + config.common.hmr);
   });
 } else {
   compiler.watch({}, function(err, stats) {

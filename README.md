@@ -1,6 +1,6 @@
-# moon v1.1.4
+# moon
 
-moon is a minimal web application framework written in Go and React ES6. It uses npm and Node.js buildtools extensively during the development process (ie. webpack, babel, react jsx, scss). moon makes it easy to create and rapid prototype Single Page Applications (SPA). When your application is ready for production you can remove node.js as a dependency. 
+moon is a web application boilerplate written in Go and React ES6. It uses npm and Node.js buildtools extensively during the development process (ie. webpack, babel, react jsx, scss). moon makes it easy to create and rapid prototype Single Page Applications (SPA). When your application is ready for production you can remove node.js as a dependency. 
 
 # Hot Module Replacement (HMR)
 
@@ -22,14 +22,12 @@ js = "bundle.js" # Auto-prefixed with static
 style = "bundle.css" # Auto-prefixed with static 
 api = "/api/" # prefix for api endpoints 
 hot = true # enables live reload. env must be development and hmr must be set
-hmr = "localhost:8889" # when hot flag is true the bundle is served via jsonp from webpack server 
+hmr = "192.0.0.1:8889" # when hot flag is true the bundle is served via jsonp from webpack server 
 
 [server]
 template = "template.html.tpl"
-address = "localhost:8888"
-# when env is production it will prefix bundles with the serve option
-# this is useful for reverse proxies
-serve = "example.com"
+address = "0.0.0.0:8888"
+serve = "192.0.0.1:8888"
 
 [client]
 entry = "entry.js"
